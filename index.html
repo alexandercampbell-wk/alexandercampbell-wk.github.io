@@ -1,0 +1,35 @@
+<html>
+  <head> </head>
+  <body>
+    <p>Copy this paragraph</p>
+    <div id="some div">
+      <p>including some <b>rich info</b>.</p>
+    </div>
+    <button id="paste">Click to paste</button>
+    <button id="copy">Click to copy</button>
+  </body>
+
+  <script type="text/javascript">
+    document.getElementById("paste").addEventListener("click", async () => {
+      const contents = await navigator.clipboard.read();
+      for (const item of contents) {
+        for (const type of item.types) {
+          const blob = await item.getType(type);
+          console.log(`pasted item ${item}:`, await blob.text());
+        }
+      }
+    });
+
+    document.getElementById("copy").addEventListener("click", async () => {
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          "text/html": new Blob(
+            ["<html><body><p>goodness gracious</p></body></html>"],
+            { type: "text/html" },
+          ),
+        }),
+      ]);
+      console.log('copied item!');
+    });
+  </script>
+</html>
